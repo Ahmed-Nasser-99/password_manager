@@ -263,7 +263,7 @@
       <button class="btn btn-primary " style="width: 40%; display: inline;" onclick="generatePassword(this)" id="generate-password">Generate</button>
       <button class="btn btn-primary " style="width: 40%;display: inline;" id="copy-generated-password">Copy</button>
     </div>
-    <textarea id="generatedPasswords" disabled rows="4" style="margin-bottom: 10px;" >
+    <textarea id="generatedPasswords"  disabled rows="4" style="margin-bottom: 10px; resize: none;" >
     </textarea>
   </div>
   <form id="search-form">
@@ -359,7 +359,8 @@
             return;
           }
           let length = parseInt(document.querySelector("#passwordLength").value);
-          document.querySelector("#generatedPasswords").innerHTML = length; //HtmlEncode(generatedPassword);
+          let generatedPassword = generateRandomPassword(length);
+          document.querySelector("#generatedPasswords").innerHTML = generatedPassword; //HtmlEncode(generatedPassword);
         }
 
         // Copy generated random password

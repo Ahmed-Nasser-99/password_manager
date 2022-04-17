@@ -69,7 +69,6 @@
     </div>
 </div>
 
-<!-- Register Modal -->
 <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -85,17 +84,19 @@
                         placeholder="Password">
                     <input class="form-control mb-2" type="password" name="password_" id="register-password_"
                         placeholder="Re-enter password">
+                </form>
+                <div class="mx-auto" style="width: 85%">
                     <div class="ms-3 text-start">
-                        <label for="formFile" class="form-label text-start">Account Picture</label>
+                        <label for="register-picture" class="form-label text-start">Account Picture</label>
                     </div>
-                    <input class="form-control" type="file" id="formFile">
+                    <input class="form-control" accept="image/png, image/jpeg" type="file" id="register-picture">
                     <div class="text-start font-weight-bold">
                         <p style="color: darkred;font-weight: 300;margin-bottom: 3px;">This picture will be used in every log in and it can't be changed or downloaded after registration</p>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-dark w-100" id="register-button">Register</button>
-                </form>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark w-100" id="register-button">Register</button>
             </div>
         </div>
     </div>
@@ -142,6 +143,9 @@
     <script>
         document.querySelector("#login-form").onsubmit = () => false;
         let loginButton = document.querySelector("#login-button");
+        function test(cb){
+            console.log("SS");
+        }
         loginButton.onclick = () => {
             let username = document.querySelector("#login-username").value;
             let password = document.querySelector("#login-password").value;
@@ -161,10 +165,7 @@
             let reader = new FileReader();
             let base64String = "";
             reader.onload = function () {
-                base64String = reader.result
-                .toString()
-                .replace("data:", "")
-                .replace(/^.+,/, "");
+                base64String = reader.result.toString();
             };
             reader.readAsDataURL(picture);
             reader.onloadend = () => {
@@ -187,25 +188,46 @@
             let username = document.querySelector("#register-username").value;
             let password = document.querySelector("#register-password").value;
             let password_ = document.querySelector("#register-password_").value;
+            let registerPicture = document.querySelector("#register-picture").files[0];
+            if(username === ""){
+                alert("Enter a user name")
+                return
+            }
+            if(password === ""){
+                alert("Enter a password")
+                return
+            }
+            if(registerPicture === undefined){
+                alert("Choose the account picture")
+                return
+            }
             if (password !== password_) {
                 alert("Passwords don't match");
                 return;
             }
-            postData(`${window.location.origin}/api/register`, data = {
+            let reader = new FileReader();
+            let base64String = "";
+            reader.onload = function () {
+                base64String = reader.result.toString();
+            };
+            reader.readAsDataURL(registerPicture);
+            reader.onloadend = () => {
+                console.log(base64String);
+                postData(`${window.location.origin}/api/register`, data = {
                 username: username,
                 password: password
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Registered!");
+            }).then(response => {
+                    if (response.ok)
                         window.location.replace(`${window.location.origin}/vault`);
-                    }
-                    else
+                    else {
                         response.json().then(result => alert(result.error));
-                });
-        }
-
-    </script>
+                    }
+                })
+            };
+            }
+            
+            
+            </script>
 </body>
 
 </html>
