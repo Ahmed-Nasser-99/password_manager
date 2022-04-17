@@ -6,7 +6,7 @@
 
         <div class="row mx-auto">
           <!--Add password form-->
-          <form id="add-password-form" class="col-12 col-sm-12 col-md-6" method="post" action="http://127.0.0.1:8000/api/passwords">
+          <form id="add-password-form" class="col-12 col-lg-4" method="post" action="http://127.0.0.1:8000/api/passwords">
               <input class="form-control mb-2" autofocus  type="text" id="email" name="email" placeholder="Email">
               <input class="form-control mb-2"  type="text" id="username" name="username" placeholder="Username">
               <input class="form-control mb-2"  type="password" id="password" name="password" placeholder="Password">
@@ -17,21 +17,256 @@
               </div>
           </form>
           <!--Random Password Generator-->
-          <div class="card mx-auto text-center col-12 col-sm-12 col-md-6">
-            <h5 class="card-header">Random Password Generator</h5>
-            <div class="card-body">
-                <input type="number" id="length" class="form-control mb-2" placeholder="Length">
-                <div class="d-grid">
-                  <button class="btn btn-primary mb-2" id="generate-password">Generate</button>
-                  <button class="btn btn-primary mb-2" id="copy-generated-password">Copy</button>
-                </div>
-                <div id="generated-password" class="mt-4"></div>
-            </div>
-          </div>
+          <div class="card mx-auto text-center col-12 col-lg-8" style="margin-bottom: 10px;">
+    <h5 class="card-header">Random Password Generator</h5>
+    <div class="my-3">
+      <div class="row py-1">
+        <label for="passwordLength" class="col text-start"
+          >Password Length:</label
+        >
+        <select class="custom-select col" id="passwordLength" style="margin-right: 10px;">
+          <optgroup label="Weak">
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+          </optgroup>
+          <optgroup label="Strong">
+            <option value="16" selected>16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+            <option value="32">32</option>
+            <option value="33">33</option>
+            <option value="34">34</option>
+            <option value="35">35</option>
+            <option value="36">36</option>
+            <option value="37">37</option>
+            <option value="38">38</option>
+            <option value="39">39</option>
+            <option value="40">40</option>
+            <option value="41">41</option>
+            <option value="42">42</option>
+            <option value="43">43</option>
+            <option value="44">44</option>
+            <option value="45">45</option>
+            <option value="46">46</option>
+            <option value="47">47</option>
+            <option value="48">48</option>
+            <option value="49">49</option>
+            <option value="50">50</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          Include Numbers:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input checked id="passwordNumbers" type="checkbox" />
+          <span>&nbsp; (e.g. 123456)</span>
         </div>
-        
-        
-        <form id="search-form">
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          Include Lowercase Characters:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input checked id="passwordLowercase" type="checkbox" />
+          <span>&nbsp; (e.g. abcdefgh)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          Include Upper Characters:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input checked id="passwordUppercase" type="checkbox" />
+          <span>&nbsp; (e.g. ABCDEFGH)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          Begin with a letter:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input checked id="passwordStartWithLetter" type="checkbox" />
+          <span>&nbsp; (don't begin with a number or symbol)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0 ;align-self: center;">
+          Include Symbols:
+        </label>
+        <div
+          class="col"
+          style="display: flex; flex-direction: row; align-items: center; padding-left: 0;"
+        >
+            <input checked type="checkbox" id="passwordEnableSymbols" onclick="handleClick(this);" />
+            &nbsp; &nbsp;
+            <input
+              value="~!@#$%^&*()\_+{}|<:>?-=[];,./"
+              type="text"
+              id="passwordSymbols"
+              class="form-control"
+            />
+          </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          No Similar Characters:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input id="passwordSimilarCharacters" type="checkbox" />
+          <span>&nbsp; (don't use characters like i,I,L,o,O,0)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          No Duplicate Characters:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input id="passwordDuplicateCharacters" type="checkbox" />
+          <span>&nbsp; (don't use same character more than once)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label class="col text-start" style="padding-right: 0">
+          No Sequential Characters:
+        </label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
+        >
+          <input id="passwordSequentialCharacters" type="checkbox" />
+          <span>&nbsp; (don't use sequential characters like: 789)</span>
+        </div>
+      </div>
+
+      <div class="row py-1">
+        <label for="passwordQuantity" class="col text-start">Quantity:</label>
+        <select class="custom-select col" id="passwordQuantity" style="margin-right: 10px;">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+    </div>
+    <div class="my-2" style="display: flex;justify-content: space-around;">
+      <button class="btn btn-primary " style="width: 40%; display: inline;" onclick="generatePassword(this)" id="generate-password">Generate</button>
+      <button class="btn btn-primary " style="width: 40%;display: inline;" id="copy-generated-password">Copy</button>
+    </div>
+    <textarea id="generatedPasswords" disabled rows="4" style="margin-bottom: 10px;" >
+    </textarea>
+  </div>
+  <form id="search-form">
             <div class="mb-3 mx-auto">
                 <label for="q" class="form-label">Search</label>
                 <input type="text" class="form-control" id="q">
@@ -67,7 +302,7 @@
         <input type="text" class="edit-username form-control mb-2">
         <input type="password" class="edit-password form-control mb-2" placeholder="Enter new password">
         <input type="password" class="edit-master-password form-control mb-2" placeholder="Enter master password">
-        <input type="text" class="edit-url form-control mb-2" placeholder"URL">
+        <input type="text" class="edit-url form-control mb-2" placeholder="URL">
         <input type="text" class="edit-tags form-control mb-2" placeholder="Tags">
       </div>
       <div class="modal-footer">
@@ -97,6 +332,11 @@
     <script src="{% static 'frontend/deletePasswordEvent.js' %}" type="text/javascript"></script>
     <script src="{% static 'frontend/random.js' %}" type="text/javascript"></script>    
     <script> 
+        function handleClick(cb) {
+          if (document.getElementById("passwordSymbols").disabled === true)
+            document.getElementById("passwordSymbols").disabled = false;
+          else document.getElementById("passwordSymbols").disabled = true;
+        }
         getPasswords()
         .then(results => displayPasswords(results));
 
@@ -108,10 +348,18 @@
           return s;
       }
         // Generate random password
-        document.querySelector("#generate-password").onclick = () => {
-            let length = parseInt(document.querySelector("#length").value);
-            let generatedPassword = generateRandomPassword(length);
-            document.querySelector("#generated-password").innerHTML = HtmlEncode(generatedPassword); //HtmlEncode(generatedPassword);
+        function generatePassword(cb) {
+          let symbols = document.getElementById("passwordSymbols").value;
+          if(document.getElementById("passwordSymbols").disabled === false && symbols === ""){
+            alert("please enter some symbols in the symbols textfield or uncheck the include symbols check box")
+            return;
+          }
+          if(document.getElementById("passwordSymbols").disabled === false && symbols.match(/[a-zA-Z0-9]/g)){
+            alert("please enter only symbols in the symbols text field")
+            return;
+          }
+          let length = parseInt(document.querySelector("#passwordLength").value);
+          document.querySelector("#generatedPasswords").innerHTML = length; //HtmlEncode(generatedPassword);
         }
 
         // Copy generated random password

@@ -51,11 +51,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="w-75 mx-auto mb-4" id="login-form">
+                <form class="mx-auto" style="width: 85%" id="login-form">
                     <input class="form-control mb-2" type="text" name="username" id="login-username"
                         placeholder="Username">
                     <input class="form-control mb-2" type="password" name="password" id="login-password"
                         placeholder="Password">
+                    <div class="ms-3 text-start">
+                        <label for="login-picture" class="form-label text-start">Account Picture</label>
+                    </div>
+                    <input class="form-control" accept="image/png, image/jpeg" type="file" id="login-picture">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-dark w-100" id="login-button">Login</button>
@@ -74,13 +78,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="w-75 mx-auto" id="register-form">
+                <form class="mx-auto" style="width: 85%" id="register-form">
                     <input class="form-control mb-2" type="text" name="username" id="register-username"
                         placeholder="Username">
                     <input class="form-control mb-2" type="password" name="password" id="register-password"
                         placeholder="Password">
                     <input class="form-control mb-2" type="password" name="password_" id="register-password_"
                         placeholder="Re-enter password">
+                    <div class="ms-3 text-start">
+                        <label for="formFile" class="form-label text-start">Account Picture</label>
+                    </div>
+                    <input class="form-control" type="file" id="formFile">
+                    <div class="text-start font-weight-bold">
+                        <p style="color: darkred;font-weight: 300;margin-bottom: 3px;">This picture will be used in every log in and it can't be changed or downloaded after registration</p>
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-dark w-100" id="register-button">Register</button>
@@ -134,17 +145,41 @@
         loginButton.onclick = () => {
             let username = document.querySelector("#login-username").value;
             let password = document.querySelector("#login-password").value;
-            postData(`${window.location.origin}/api/login`, data = {
+            let picture = document.querySelector("#login-picture").files[0];
+            if(username === ""){
+                alert("Enter a user name")
+                return
+            }
+            if(password === ""){
+                alert("Enter a password")
+                return
+            }
+            if(picture === undefined){
+                alert("Choose the account picture")
+                return
+            }
+            let reader = new FileReader();
+            let base64String = "";
+            reader.onload = function () {
+                base64String = reader.result
+                .toString()
+                .replace("data:", "")
+                .replace(/^.+,/, "");
+            };
+            reader.readAsDataURL(picture);
+            reader.onloadend = () => {
+                console.log(base64String);
+                postData(`${window.location.origin}/api/login`, data = {
                 username: username,
                 password: password
-            })
-                .then(response => {
+            }).then(response => {
                     if (response.ok)
                         window.location.replace(`${window.location.origin}/vault`);
                     else {
                         alert("Invalid credentials.");
                     }
                 })
+            };
         }
         document.querySelector("#register-form").onclick = () => false;
         let registerButton = document.querySelector("#register-button");
