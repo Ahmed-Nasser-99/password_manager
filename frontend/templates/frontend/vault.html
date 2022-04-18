@@ -261,7 +261,7 @@
     </div>
     <div class="my-2" style="display: flex;justify-content: space-around;">
       <button class="btn btn-primary " style="width: 40%; display: inline;" onclick="generatePassword(this)" id="generate-password">Generate</button>
-      <button class="btn btn-primary " style="width: 40%;display: inline;" id="copy-generated-password">Copy</button>
+      <button class="btn btn-primary " style="width: 40%; display: inline;" id="copy-generated-password">Copy</button>
     </div>
     <textarea id="generatedPasswords"  disabled rows="4" style="margin-bottom: 10px; resize: none;" >
     </textarea>
@@ -350,6 +350,7 @@
         // Generate random password
         function generatePassword(cb) {
           let symbols = document.getElementById("passwordSymbols").value;
+          let uniqueSymbols = [...new Set(symbols)].join("")
           if(document.getElementById("passwordSymbols").disabled === false && symbols === ""){
             alert("please enter some symbols in the symbols textfield or uncheck the include symbols check box")
             return;
@@ -359,12 +360,20 @@
             return;
           }
           let length = parseInt(document.querySelector("#passwordLength").value);
-          let generatedPassword = generateRandomPassword(length);
-          document.querySelector("#generatedPasswords").innerHTML = generatedPassword; //HtmlEncode(generatedPassword);
+          let quantity = parseInt(document.querySelector("#passwordQuantity").value);
+          let similar = document.querySelector("#passwordSimilarCharacters").checked;
+          let sameChar = document.querySelector("#passwordDuplicateCharacters").checked;
+          let seq = document.querySelector("#passwordSequentialCharacters").checked;
+          let beginWithChar = document.querySelector("#passwordStartWithLetter").checked;
+          let dontIncludeNumber = !(document.querySelector("#passwordNumbers").checked);
+          let dontIncludeLC = !(document.querySelector("#passwordLowercase").checked);
+          let dontIncludeUC = !(document.querySelector("#passwordUppercase").checked);
+          let generatedPassword = generateRandomPassword(quantity,length,uniqueSymbols,similar,sameChar,seq,beginWithChar,dontIncludeNumber,dontIncludeLC,dontIncludeUC);
+          document.querySelector("#generatedPasswords").value = generatedPassword.join("\n");
         }
 
         // Copy generated random password
-        document.querySelector("#copy-generated-password").onclick = () => navigator.clipboard.writeText(document.querySelector("#generated-password").innerText.trim());
+        document.querySelector("#copy-generated-password").onclick = () => navigator.clipboard.writeText(document.querySelector("#generatedPasswords").value.trim());
     </script>
 
 {% endblock script %}
