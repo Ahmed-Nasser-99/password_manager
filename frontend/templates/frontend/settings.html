@@ -39,12 +39,16 @@
                     response.json().then(result => alert(result.error))
                     return false;
                 }
+                if (response.ok){
+                    hash(newUsername + newMasterPassword).then((hex) => window.localStorage.setItem("key", hex));
+                }
                 // could update user data with new username, but no new master password was given
                 // so don't need to re-encrypt all passwords
                 if(newMasterPassword == "") {
                     alert("User data updated successfully.")
                     return false;
                 }
+                
                 // updated username and master password
                 // re-encrypt all passwords and send the vault to the server
                 getPasswords()

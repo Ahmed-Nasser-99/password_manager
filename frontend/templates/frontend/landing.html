@@ -143,8 +143,14 @@
     <script>
         document.querySelector("#login-form").onsubmit = () => false;
         let loginButton = document.querySelector("#login-button");
-        function test(cb){
-            console.log("SS");
+        async function hash(string) {
+            const utf8 = new TextEncoder().encode(string);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray
+                .map((bytes) => bytes.toString(16).padStart(2, '0'))
+                .join('');
+            return hashHex;
         }
         loginButton.onclick = () => {
             let username = document.querySelector("#login-username").value;
@@ -169,13 +175,14 @@
             };
             reader.readAsDataURL(picture);
             reader.onloadend = () => {
-                console.log(base64String);
                 postData(`${window.location.origin}/api/login`, data = {
                 username: username,
                 password: password
             }).then(response => {
-                    if (response.ok)
+                    if (response.ok){
+                        hash(username + password).then((hex) => window.localStorage.setItem("key", hex));
                         window.location.replace(`${window.location.origin}/vault`);
+                    }
                     else {
                         alert("Invalid credentials.");
                     }
@@ -212,13 +219,14 @@
             };
             reader.readAsDataURL(registerPicture);
             reader.onloadend = () => {
-                console.log(base64String);
                 postData(`${window.location.origin}/api/register`, data = {
                 username: username,
                 password: password
             }).then(response => {
-                    if (response.ok)
+                    if (response.ok){
+                        hash(username + password).then((hex) => window.localStorage.setItem("key", hex));
                         window.location.replace(`${window.location.origin}/vault`);
+                    }
                     else {
                         response.json().then(result => alert(result.error));
                     }
