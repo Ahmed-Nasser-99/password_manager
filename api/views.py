@@ -7,13 +7,13 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from django.db.models import Q
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 
 
 # Create your views here.
 
 class PasswordList(generics.ListCreateAPIView,
-                    generics.UpdateAPIView):
+                   generics.UpdateAPIView):
     queryset = Password.objects.all()
     serializer_class = PasswordSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
@@ -22,13 +22,13 @@ class PasswordList(generics.ListCreateAPIView,
         q = request.query_params.get('q', None)
         if q is None:
             return super().get(request)
-    
+
         passwords = Password.objects.filter(user=request.user)
         passwords = passwords.filter(Q(url__icontains=q)
-                                     |Q(email__icontains=q)
-                                     |Q(username__icontains=q))
-                                     #|Q(tags__tags__contains =q)) JSON filtering is not supported in SQLite
-                                     # Will try to make it work when I change the database backend to PostgreSQL
+                                     | Q(email__icontains=q)
+                                     | Q(username__icontains=q))
+        # |Q(tags__tags__contains =q)) JSON filtering is not supported in SQLite
+        # Will try to make it work when I change the database backend to PostgreSQL
         serializer = PasswordSerializer(passwords, many=True)
         return Response(serializer.data)
 
@@ -36,20 +36,20 @@ class PasswordList(generics.ListCreateAPIView,
         passwords = Password.objects.filter(user=request.user)
         # serialize all passwords
         for i in range(len(passwords)):
-            serializer = PasswordSerializer(passwords[i], data=request.data['passwords'][i])
+            serializer = PasswordSerializer(
+                passwords[i], data=request.data['passwords'][i])
             if serializer.is_valid():
                 serializer.save()
             else:
                 return Response({"errors": serializer.errors}, status=400)
         return Response({"msg": "Saved all passwords successfully."}, status=200)
 
-
     def get_queryset(self):
         return Password.objects.filter(user=self.request.user).order_by('url')
-    
+
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
-    
+
 
 class UpdateUserData(APIView):
     def patch(self, request):
@@ -62,7 +62,7 @@ class UpdateUserData(APIView):
 
         if not user.check_password(password):
             return Response({"error": "Wrong master password."}, status=400)
-            
+
         if new_username is not None and new_username != '':
             try:
                 existing_user = User.objects.get(username=new_username)
@@ -75,15 +75,13 @@ class UpdateUserData(APIView):
 
         user.save()
         login(request, user)
-        return Response({"User credentials updated successfully."}, status=200)    
+        return Response({"User credentials updated successfully."}, status=200)
 
 
 class PasswordDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Password.objects.all()
     serializer_class = PasswordSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    
 
 
 class VerifyMasterPassword(APIView):
@@ -97,7 +95,8 @@ class RegisterUser(APIView):
             existing_user = User.objects.get(username=request.data['username'])
             return Response({"error": "Username already taken."}, status=400)
         except User.DoesNotExist:
-            user = User.objects.create_user(username=request.data['username'], password=request.data['password'])
+            user = User.objects.create_user(
+                username=request.data['username'], password=request.data['password'], image=make_password(request.data['image']))
             user.save()
             login(request, user)
             return Response({"Registered successfully."}, status=200)
@@ -105,8 +104,10 @@ class RegisterUser(APIView):
 
 class LoginUser(APIView):
     def post(self, request):
-        user = authenticate(request, username=request.data['username'], password=request.data['password'])
-        if user is not None:
+        user = authenticate(
+            request, username=request.data['username'], password=request.data['password'])
+        correct_image = check_password(request.data['image'], user.image)
+        if user is not None and correct_image:
             login(request, user)
             return Response({"Logged in successfully."}, status=200)
         else:
@@ -116,4 +117,4 @@ class LoginUser(APIView):
 class LogoutUser(APIView):
     def get(self, request):
         logout(request)
-        return Response({"Logged out successfully."},status=200)
+        return Response({"Logged out successfully."}, status=200)
