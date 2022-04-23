@@ -1,13 +1,15 @@
 function displayPasswords(passwords) {
-    if (passwords == null)
-        return;
-    let div = document.querySelector("#passwords");
-    let content = "";
+    if (passwords == null) return;
+    let div = document.querySelector('#passwords');
+    let content = '';
     for (let i = 0; i < passwords.length; i++) {
         let passwordTags = passwords[i].tags;
-        tagsHTML = "";
+        tagsHTML = '';
         if (passwordTags !== null) {
-            passwordTags.forEach(tag => tagsHTML += `<span class="badge rounded-pill bg-primary m-1 password-tag">${tag}</span>`)
+            passwordTags.forEach(
+                (tag) =>
+                    (tagsHTML += `<span class="badge rounded-pill bg-primary m-1 password-tag">${tag}</span>`)
+            );
         }
         content += `
                     <div class="accordion-item" id="${passwords[i].id}">
@@ -38,22 +40,25 @@ function displayPasswords(passwords) {
                       </div>
                       </div>
                     </div>`;
-
-
     }
-    if (content == "")
+    if (content == '')
         content = "<h2 class='mx-auto w-75'>You don't have any passwords.</h2>";
     div.innerHTML = content;
 
-
     // add onclick event for copy buttons
     let copyButtons = document.querySelectorAll('.copy-button');
-    copyButtons.forEach(button => {
+    copyButtons.forEach((button) => {
         button.onclick = () => {
-            let encrypted_password = button.parentElement.querySelector(".encrypted-password").innerHTML.trim();
-            modalClose("Enter master password to decrypt.", decryptAndCopyPassword, encrypted_password);
-        }
-    })
+            let encrypted_password = button.parentElement
+                .querySelector('.encrypted-password')
+                .innerHTML.trim();
+            // modalClose("Enter master password to decrypt.", decryptAndCopyPassword, encrypted_password);
+            decryptAndCopyPassword(
+                localStorage.getItem('key'),
+                encrypted_password
+            );
+        };
+    });
     editPasswordEvent();
     deletePasswordEvent();
 }
