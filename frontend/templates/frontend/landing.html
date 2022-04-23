@@ -177,7 +177,8 @@
             reader.onloadend = () => {
                 postData(`${window.location.origin}/api/login`, data = {
                 username: username,
-                password: password
+                password: password,
+                image: base64String
             }).then(response => {
                     if (response.ok){
                         hash(username + password).then((hex) => window.localStorage.setItem("key", hex));
@@ -221,7 +222,8 @@
             reader.onloadend = () => {
                 postData(`${window.location.origin}/api/register`, data = {
                 username: username,
-                password: password
+                password: password,
+                image: base64String
             }).then(response => {
                     if (response.ok){
                         hash(username + password).then((hex) => window.localStorage.setItem("key", hex));
