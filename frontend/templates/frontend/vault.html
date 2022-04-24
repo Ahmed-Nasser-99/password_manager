@@ -21,60 +21,22 @@
     <h5 class="card-header">Random Password Generator</h5>
     <div class="my-3">
       <div class="row py-1">
-        <label for="passwordLength" class="col text-start"
-          >Password Length:</label
+        <label for="passwordLength" class="col text-start" style="padding-bottom: 0;">Password Length:</label>
+        <div
+          class="col"
+          style="
+            padding-left: 0;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+          "
         >
-        <select class="custom-select col" id="passwordLength" style="margin-right: 10px;">
-          <optgroup label="Weak">
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-          </optgroup>
-          <optgroup label="Strong">
-            <option value="16" selected>16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
-            <option value="32">32</option>
-            <option value="33">33</option>
-            <option value="34">34</option>
-            <option value="35">35</option>
-            <option value="36">36</option>
-            <option value="37">37</option>
-            <option value="38">38</option>
-            <option value="39">39</option>
-            <option value="40">40</option>
-            <option value="41">41</option>
-            <option value="42">42</option>
-            <option value="43">43</option>
-            <option value="44">44</option>
-            <option value="45">45</option>
-            <option value="46">46</option>
-            <option value="47">47</option>
-            <option value="48">48</option>
-            <option value="49">49</option>
-            <option value="50">50</option>
-          </optgroup>
-        </select>
+          <span id="rangeValue" style="margin-right: 20px;">64</span>
+          <input type="range" oninput="changeLength(this)" class="form-range" min="1" max="128" id="passwordLength" >
+        </div>
       </div>
 
       <div class="row py-1">
@@ -263,7 +225,7 @@
       <button class="btn btn-primary " style="width: 40%; display: inline;" onclick="generatePassword(this)" id="generate-password">Generate</button>
       <button class="btn btn-primary " style="width: 40%; display: inline;" id="copy-generated-password">Copy</button>
     </div>
-    <textarea id="generatedPasswords"  disabled rows="4" style="margin-bottom: 10px; resize: none;" >
+    <textarea id="generatedPasswords"  disabled rows="4" style="margin-bottom: 10px; resize: none;white-space: pre" >
     </textarea>
   </div>
   <form id="search-form">
@@ -336,6 +298,10 @@
             document.getElementById("passwordSymbols").disabled = false;
           else document.getElementById("passwordSymbols").disabled = true;
         }
+        function changeLength(cb) {
+          document.getElementById("rangeValue").innerHTML = document.getElementById("passwordLength").value;
+        }
+
         getPasswords()
         .then(results => displayPasswords(results));
 
@@ -349,7 +315,6 @@
         // Generate random password
         function generatePassword(cb) {
           let symbols = document.getElementById("passwordSymbols").value;
-          let uniqueSymbols = [...new Set(symbols)].join("")
           if(document.getElementById("passwordSymbols").disabled === false && symbols === ""){
             alert("please enter some symbols in the symbols textfield or uncheck the include symbols check box")
             return;
@@ -367,7 +332,7 @@
           let dontIncludeNumber = !(document.querySelector("#passwordNumbers").checked);
           let dontIncludeLC = !(document.querySelector("#passwordLowercase").checked);
           let dontIncludeUC = !(document.querySelector("#passwordUppercase").checked);
-          let generatedPassword = generateRandomPassword(quantity,length,uniqueSymbols,similar,sameChar,seq,beginWithChar,dontIncludeNumber,dontIncludeLC,dontIncludeUC);
+          let generatedPassword = generateRandomPassword(quantity,length,document.getElementById("passwordEnableSymbols").checked ? [...new Set(symbols)].join("") : "",similar,sameChar,seq,beginWithChar,dontIncludeNumber,dontIncludeLC,dontIncludeUC);
           document.querySelector("#generatedPasswords").value = generatedPassword.join("\n");
         }
 
